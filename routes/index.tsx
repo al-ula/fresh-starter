@@ -9,7 +9,7 @@ const { DARK: dark, LIGHT: light } = themes;
 
 export default function Home({ state }: PageProps) {
   const themeState = state.theme === dark ? dark : light;
-    theme.value = themeState;
+  theme.value = themeState;
   const count = useSignal(3);
   return (
     <div class="bg-[#86efac] mx-auto px-4 py-8">
