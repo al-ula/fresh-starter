@@ -1,15 +1,7 @@
 import { useSignal } from "@preact/signals";
 import Counter from "../islands/Counter.tsx";
-import ThemeToggle from "../islands/ThemeToggle.tsx";
-import { PageProps } from "$fresh/server.ts";
-import { theme } from "../signals/theme.ts";
-import themes from "../theme-config.ts";
 
-const { DARK: dark, LIGHT: light } = themes;
-
-export default function Home({ state }: PageProps) {
-  const themeState = state.theme === dark ? dark : light;
-  theme.value = themeState;
+export default function Home() {
   const count = useSignal(3);
   return (
     <div class="bg-[#86efac] mx-auto px-4 py-8">
@@ -27,7 +19,6 @@ export default function Home({ state }: PageProps) {
           <code class="mx-2">./routes/index.tsx</code> file, and refresh.
         </p>
         <Counter count={count} />
-        <ThemeToggle theme_state={themeState} />
       </div>
     </div>
   );

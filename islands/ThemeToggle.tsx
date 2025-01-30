@@ -3,22 +3,16 @@ import themes from "../theme-config.ts";
 import { theme } from "../signals/theme.ts";
 const { DARK: dark, LIGHT: light } = themes;
 
-interface ThemeToggleProps {
-  theme_state: string;
-}
-
-export default function ThemeToggle(props: ThemeToggleProps) {
+export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(theme.value === dark);
 
   useEffect(() => {
-    theme.value = props.theme_state;
-    setIsDark(props.theme_state === dark);
-  }, [props.theme_state]);
-
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme.value);
-    globalThis.document.cookie = `theme=${theme.value}; path=/`;
-  }, [theme.value]);
+    const themeCookie = getThemeCookie();
+    theme.value = themeCookie;
+    setIsDark(themeCookie === dark);
+    setDataTheme(themeCookie);
+    console.log("from cookie", themeCookie);
+  }, []);
 
   useEffect(() => {
     if (isDark) {
@@ -26,7 +20,14 @@ export default function ThemeToggle(props: ThemeToggleProps) {
     } else {
       theme.value = light;
     }
+    console.log("from isDark", isDark);
   }, [isDark]);
+
+  useEffect(() => {
+    console.log("from signal", theme.value);
+    setDataTheme(theme.value);
+    setThemeCookie(theme.value);
+  }, [theme.value]);
 
   return (
     <label className="swap-rotate swap">
@@ -57,4 +58,19 @@ export default function ThemeToggle(props: ThemeToggleProps) {
       </svg>
     </label>
   );
+}
+
+function setDataTheme(theme: string) {
+  document.documentElement.setAttribute("data-theme", theme);
+}
+
+function setThemeCookie(theme: string): boolean {
+  globalThis.document.cookie = `theme=${theme}; path=/`;
+  return getThemeCookie() === theme;
+}
+
+function getThemeCookie(): string {
+  return document.cookie.split(";").find((c) =>
+    c.startsWith("theme=")
+  )?.split("=")[1] || light;
 }
