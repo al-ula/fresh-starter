@@ -15,15 +15,6 @@ export default function ThemeToggle() {
   }, []);
 
   useEffect(() => {
-    if (isDark) {
-      theme.value = dark;
-    } else {
-      theme.value = light;
-    }
-    console.log("from isDark", isDark);
-  }, [isDark]);
-
-  useEffect(() => {
     console.log("from signal", theme.value);
     setDataTheme(theme.value);
     setThemeCookie(theme.value);
@@ -36,7 +27,10 @@ export default function ThemeToggle() {
         type="checkbox"
         className="theme-controller"
         checked={isDark}
-        onChange={() => setIsDark(!isDark)}
+        onChange={() => {
+          setIsDark(!isDark)
+          theme.value = isDark ? light : dark;
+        }}
       />
 
       {/* sun icon */}
